@@ -13,10 +13,10 @@ extension IsWhole on double {
 
 extension SimpleString on double {
   String toSimpleString() {
-    if (this.isWhole || this == 0) {
-      return this.toInt().toString();
+    if (isWhole || this == 0) {
+      return toInt().toString();
     } else {
-      return this.toString();
+      return toString();
     }
   }
 }
@@ -26,19 +26,16 @@ extension Replace on String {
     return replaceRange(length - 1, length, sign);
   }
 }
-extension HasSign on String {
-  bool hasSign(List<String> characters){
-    bool isHasSign = false;
-    for(var char in this.characters){
 
-      if(char.isOperator){
+extension HasSign on String {
+  bool hasSign(List<String> characters) {
+    bool isHasSign = false;
+    for (var char in this.characters) {
+      if (char.isOperator) {
         isHasSign = true;
         return isHasSign;
-      }else{
-      }
+      } else {}
     }
     return isHasSign;
-
   }
-
 }

@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
+import '../calculator/widgets/parent_scale.dart';
 
 class TestPage extends StatelessWidget {
   const TestPage({Key? key}) : super(key: key);
@@ -8,58 +8,45 @@ class TestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+        backgroundColor: Colors.grey.shade500,
+        body: SafeArea(
           child: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              color: Colors.green,
-            ),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: NeumorphicButton(
+                    minDistance: 0,
+                    onPressed: () {},
+                    style: const NeumorphicStyle(
+                        border: NeumorphicBorder(isEnabled: true),
+                        shape: NeumorphicShape.concave,
+                        depth: 20,
+                        boxShape: NeumorphicBoxShape.circle()),
+                    child: const ParentScale(widthScale: 0.7, heightScale: 0.7, child: icon()),
+                  ),
+                ),
+              )
+            ],
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: EdgeInsets.all(0),
-              color: Colors.orange,
+        ));
+  }
+}
 
-              child: Builder(builder: (context) {
-                final double buttonSize = MediaQuery.of(context).size.width / 5.6;
-                final size = 1.fr;
-                return LayoutGrid(
+class icon extends StatelessWidget {
+  const icon({
+    Key? key,
+  }) : super(key: key);
 
-                  // columnGap: 50,
-                  // rowGap: 19,
-                  // gridFit: GridFit.passthrough,
-                  columnSizes: [size, size, size, size],
-                  rowSizes: [
-                    size,
-                    size,
-                    size,
-                    size,
-                    size,
-
-                  ],
-                  children: List.generate(
-                      20,
-                      (index) => Center(
-                        child: Container(
-                          // alignment: Alignment.center,
-                          height: buttonSize, width: buttonSize,
-                          decoration: const BoxDecoration(
-                            // border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
-                            color: Colors.grey,
-                          ),
-                          child: Center(child: Text(index.toString())),
-                        ),
-                      )),
-                );
-              }),
-            ),
-          )
-        ],
-      )),
+  @override
+  Widget build(BuildContext context) {
+    return const Icon(
+      Icons.close,
+      color: Colors.black,
     );
   }
 }

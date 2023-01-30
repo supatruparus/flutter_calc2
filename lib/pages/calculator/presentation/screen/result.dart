@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/result.dart';
-import '../data/result_size.dart';
-import 'style.dart' as styles;
+import '../../data/result.dart';
+import '../../data/screen_provider.dart';
+import '../style.dart' as styles;
 
 class Result extends StatelessWidget {
   const Result({
@@ -17,18 +17,25 @@ class Result extends StatelessWidget {
       child: Consumer(builder: (context, ref, child) {
         final ResultController result = ResultController(ref);
 
-        return AnimatedSize(
-            curve: Curves.easeOutSine,
-            duration: const Duration(milliseconds: 300),
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOutBack,
+          width: double.infinity,
+          height: !result.isActive ? 64 : 100,
+          // color: Colors.grey,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            alignment: Alignment.centerRight,
             child: Text(
               ref.watch(resultProvider),
+              maxLines: 1,
               style: result.isActive
-                  ? styles.resultText.copyWith(
-                      fontSize: ref.watch(resultSizeProvide),
-                    )
+                  ? styles.resultText
                   : styles.resultText.copyWith(color: Colors.white24),
               textAlign: TextAlign.end,
-            ));
+            ),
+          ),
+        );
       }),
     );
   }

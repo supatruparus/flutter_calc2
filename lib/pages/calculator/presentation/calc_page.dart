@@ -1,8 +1,8 @@
-import 'package:arch_test/pages/calculator/presentation/screen.dart';
+import 'package:arch_test/pages/calculator/presentation/screen/screen.dart';
 
 import 'package:flutter/material.dart';
 
-import 'keyboard.dart';
+import 'keyboard/keyboard.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({Key? key}) : super(key: key);
@@ -14,14 +14,13 @@ class CalculatorPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: const [
-            Screen(flex: 2,),
-            Expanded(
-                child: Keyboard())
+            Screen(
+              flex: 4,
+            ),
+            Keyboard(flex: 5),
           ],
         ),
       ),
     );
   }
 }
-
-

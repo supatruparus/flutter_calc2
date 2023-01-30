@@ -1,25 +1,25 @@
-import 'button/calc_button.dart';
+import '../../presentation/keyboard/button/calc_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 import 'controller.dart';
 
-class Calc_Keyboard extends StatelessWidget {
-  Calc_Keyboard({
+class CalcKeyboard extends StatelessWidget {
+  const CalcKeyboard({
     Key? key,
     required this.controller,
     this.buttonsStyle,
-    this.buttonsSize,
+    this.buttonsSize = double.infinity,
     this.textColor = Colors.black,
   }) : super(key: key);
   final CalcKeysBinding controller;
   final Color textColor;
   final double? buttonsSize;
   final BoxDecoration? buttonsStyle;
+  // final Widget button;
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onVerticalDragStart: (details) {},
       child: Center(
@@ -58,7 +58,6 @@ class Calc_Keyboard extends StatelessWidget {
                   onPressed: controller.onRemove,
                   size: buttonsSize,
                   style: buttonsStyle,
-
                   child: Center(
                       child: Icon(
                     Icons.backspace,
@@ -81,7 +80,6 @@ class Calc_Keyboard extends StatelessWidget {
                   value: 'x²',
                   size: buttonsSize,
                   style: buttonsStyle,
-
                   onPressed: controller.onStepen,
                 ),
               ),
