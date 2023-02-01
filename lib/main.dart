@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:arch_test/pages/calculator/presentation/calc_page/calc_page.dart';
-
+import 'package:arch_test/pages/calculator/presentation/root.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_size/window_size.dart';
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
           textTheme: const TextTheme(bodyMedium: TextStyle(fontSize: 33)),
           colorScheme: const ColorScheme.dark()),
-      home: const CalculatorPage(),
+      home: calculator,
     );
   }
 }

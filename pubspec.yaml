@@ -49,6 +49,7 @@ dependencies:
       path: parent_scale
   flutter_neumorphic: ^3.2.0
   vibration: ^1.7.6
+  flex_color_picker: ^3.1.0
 
 dev_dependencies:
   flutter_test:

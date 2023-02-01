@@ -2,7 +2,6 @@ import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:arch_test/pages/calculator/data/extensions/extensions.dart';
 import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
 import 'package:arch_test/pages/calculator/data/result.dart';
-import 'package:arch_test/pages/calculator/data/shadow_provider.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +80,7 @@ class KeyBindings implements CalcKeysBinding {
   void onToggleSign() {}
 
   @override
-  void insert(String string) {
+  Future<void> insert(String string) async {
     _onTap();
 
     if (resultSize.isActive) {
@@ -107,7 +106,6 @@ class KeyBindings implements CalcKeysBinding {
   inputSign(String sign) {
     Vibration.vibrate(duration: 50, amplitude: 20);
     inputFocus.unfocus();
-    print(resultSize.isActive);
     if (resultSize.isActive) {
       inputController.clear();
       inputController.text = result;

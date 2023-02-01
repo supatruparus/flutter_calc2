@@ -1,6 +1,6 @@
 import 'package:arch_test/pages/calculator/data/const.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class _Style extends BoxDecoration {
   const _Style(
@@ -12,14 +12,6 @@ class _Style extends BoxDecoration {
   final TextStyle? textStyle;
   final EdgeInsets padding;
 }
-
-var primaryColor = Colors.lightBlueAccent;
-
-TextStyle inputStyle = const TextStyle(
-    fontFamily: 'Changa',
-    height: 1,
-    fontSize: 48,
-    /*backgroundColor: Colors.green,*/ overflow: TextOverflow.clip);
 
 BoxDecoration circButton = BoxDecoration(
     color: Colors.grey,
@@ -35,15 +27,7 @@ const TextStyle buttonsText = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
-final buttonsStyle = NeumorphicStyle(
-  lightSource: LightSource.topRight,
-  shape: NeumorphicShape.concave,
-  color: primaryColor,
-  depth: 8,
-  surfaceIntensity: 5,
-  boxShape: NeumorphicBoxShape.circle(),
-  intensity: 0.27,
-);
+
 const resultStyle = _Style(
   textStyle: TextStyle(
       fontFamily: 'Changa',
@@ -61,3 +45,84 @@ final screenStyle = _Style(
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter));
 final backgroundColor = MyColors.darkGrey;
+
+final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, CalculatorTheme>((ref) {
+  return ThemeNotifier();
+});
+
+class CalculatorTheme {
+  CalculatorTheme({
+    this.buttonStyle = const NeumorphicStyle(
+      lightSource: LightSource.topRight,
+      shape: NeumorphicShape.convex,
+      color: Colors.red,
+      depth: 8,
+      surfaceIntensity: 5,
+      boxShape: NeumorphicBoxShape.circle(),
+      intensity: 0.27,
+    ),
+    this.primaryColor = Colors.grey,
+    this.inputStyle = const TextStyle(
+        fontFamily: 'Changa',
+        height: 1,
+        fontSize: 48,
+        color: Colors.white,
+        shadows: [Shadow(offset: Offset(1, 4), color: Colors.white12, blurRadius: 10)]),
+    this.resultText = const TextStyle(
+        fontFamily: 'Changa',
+        fontSize: 56,
+        height: 1,
+        shadows: [Shadow(offset: Offset(1, 4), color: Colors.white12, blurRadius: 10)]),
+    this.buttonsShape = NeumorphicShape.convex,
+  });
+  final Color primaryColor;
+  final TextStyle resultText;
+  final TextStyle inputStyle;
+  final NeumorphicShape buttonsShape;
+  final NeumorphicStyle buttonStyle;
+
+  CalculatorTheme copyWith({
+    Color? primaryColor,
+    TextStyle? resultText,
+    TextStyle? inputStyle,
+    NeumorphicShape? buttonsShape,
+    NeumorphicStyle? buttonStyle,
+  }) {
+    return CalculatorTheme(
+      primaryColor: primaryColor ?? this.primaryColor,
+      resultText: resultText ?? this.resultText,
+      inputStyle: inputStyle ?? this.inputStyle,
+      buttonsShape: buttonsShape ?? this.buttonsShape,
+      buttonStyle: buttonStyle ?? this.buttonStyle,
+    );
+  }
+}
+
+class ThemeNotifier extends StateNotifier<CalculatorTheme> {
+  ThemeNotifier() : super(CalculatorTheme());
+
+  Color get primaryColor => state.primaryColor;
+
+  set primaryColor(Color color) {
+    state = state.copyWith(primaryColor: color);
+    state = state.copyWith(buttonStyle: state.buttonStyle.copyWith(color: color));
+  }
+
+  setButtonShape(NeumorphicShape shape) {
+    state = state.copyWith(buttonsShape: shape);
+  }
+
+  changeButtonStyle(NeumorphicStyle style) {
+    state = state.copyWith(buttonStyle: style);
+  }
+}
+
+class CalcThemeRepository {
+  setPrimaryColor(WidgetRef ref, Color color) {
+    ref.read(themeNotifierProvider.notifier).primaryColor = color;
+  }
+
+  setButtonStyle(WidgetRef ref, NeumorphicStyle style) {
+    ref.read(themeNotifierProvider.notifier).changeButtonStyle(style);
+  }
+}

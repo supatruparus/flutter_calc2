@@ -1,5 +1,3 @@
-import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
-import 'package:arch_test/pages/calculator/data/key_bindings.dart';
 import 'package:arch_test/pages/calculator/data/screen_provider.dart';
 import 'package:arch_test/pages/calculator/presentation/style.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,9 @@ class Result extends StatelessWidget {
       flex: flex,
       child: Consumer(builder: (context, ref, child) {
         final ResultController result = ResultController(ref);
-
+        final resultStyle = ref.watch(themeNotifierProvider.select((value) => value.resultText));
+        final primaryColor = ref.watch(themeNotifierProvider.select((value) => value.primaryColor));
+        final activeColor = Color.lerp(Colors.white, primaryColor, 0.6);
         return Center(
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
@@ -35,8 +35,16 @@ class Result extends StatelessWidget {
                 ref.watch(resultProvider.select((value) => value.isNotEmpty ? '= $value' : '')),
                 maxLines: 1,
                 style: result.isActive
-                    ? resultStyle.textStyle
-                    : resultStyle.textStyle!.copyWith(color: Colors.white24),
+                    ? resultStyle.copyWith(
+                        color: activeColor,
+                        shadows: [
+                          Shadow(
+                              offset: Offset(1, 4),
+                              color: activeColor?.withOpacity(0.3) ?? Colors.white12,
+                              blurRadius: 10)
+                        ],
+                      )
+                    : resultStyle.copyWith(color: Colors.white12),
                 textAlign: TextAlign.end,
               ),
             ),

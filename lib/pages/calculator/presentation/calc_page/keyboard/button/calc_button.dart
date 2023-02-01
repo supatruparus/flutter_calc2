@@ -17,7 +17,7 @@ class CalculButton extends StatelessWidget {
   final Function() onPressed;
   final Widget? child;
   final double fontSize = 32;
-  final BoxDecoration? style;
+  final NeumorphicStyle? style;
   final double? size;
   // final Widget button;
 
@@ -30,7 +30,7 @@ class CalculButton extends StatelessWidget {
         child: NeumorphicButton(
           drawSurfaceAboveChild: true,
           margin: const EdgeInsets.all(6),
-          style: buttonsStyle,
+          style: style,
           // margin: const EdgeInsets.all(5),
           onPressed: () {
             onPressed();
