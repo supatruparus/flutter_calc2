@@ -1,4 +1,4 @@
-import 'package:arch_test/pages/calculator/const.dart';
+import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:arch_test/pages/calculator/data/extensions/extensions.dart';
 import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
 import 'package:arch_test/pages/calculator/data/result.dart';
@@ -21,6 +21,8 @@ extension RemoveLast on String {
 class KeyBindings implements CalcKeysBinding {
   KeyBindings(this.ref);
   final WidgetRef ref;
+
+  String get result => ref.read(resultProvider);
   ResultController get resultSize => ResultController(ref);
   CalculatorRepository get calculator => CalculatorRepository(ref: ref);
   TextEditingController get inputController => ref.read(inputControllerProvider);
@@ -58,7 +60,8 @@ class KeyBindings implements CalcKeysBinding {
 
   @override
   void onMultiply() {
-    _onTap();
+    Vibration.vibrate(duration: 50, amplitude: 20);
+    inputFocus.unfocus();
     inputSign('×');
   }
 
@@ -80,6 +83,7 @@ class KeyBindings implements CalcKeysBinding {
   @override
   void insert(String string) {
     _onTap();
+
     if (resultSize.isActive) {
       inputController.clear();
     }
@@ -101,21 +105,26 @@ class KeyBindings implements CalcKeysBinding {
   }
 
   inputSign(String sign) {
-    _onTap();
-    ref.read(shadowProvider.notifier).update((state) => const BoxShadow());
-    resultSize.set(64);
-    String inputText = inputController.text;
-    if (inputText.characters.last.isOperator) {
+    Vibration.vibrate(duration: 50, amplitude: 20);
+    inputFocus.unfocus();
+    print(resultSize.isActive);
+    if (resultSize.isActive) {
+      inputController.clear();
+      inputController.text = result;
+    }
+    //
+    if (inputController.text.characters.last.isOperator) {
       ///заменить знак
       inputController.text = inputController.text.replaceLast(sign);
     } else {
       ///добавить знак
-      inputController.text = inputText + sign;
+      inputController.text = inputController.text + sign;
     }
+    resultSize.set(64);
   }
 
   _onTap() {
-    Vibration.vibrate(duration: 50, amplitude: 5);
+    Vibration.vibrate(duration: 50, amplitude: 20);
     inputFocus.unfocus();
   }
 }

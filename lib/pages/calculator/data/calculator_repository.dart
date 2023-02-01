@@ -1,4 +1,4 @@
-import 'package:arch_test/pages/calculator/const.dart';
+import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
 import 'package:arch_test/pages/calculator/data/result.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,12 @@ extension CalcFormat on String {
 class CalculatorRepository {
   CalculatorRepository({required this.ref});
   final WidgetRef ref;
+
+  String get inputText => ref.read(inputControllerProvider).text;
+  set inputText(String text) {
+    ref.read(inputControllerProvider).text = text;
+  }
+
   set result(String value) {
     ref.read(resultProvider.notifier).update((state) => value);
   }
@@ -50,6 +56,6 @@ class CalculatorRepository {
 
   showResult() {
     double result = calculate(ref.read(inputControllerProvider).text.calcFormat());
-    ref.read(resultProvider.notifier).update((state) => '= ${result.toSimpleString()}');
+    ref.read(resultProvider.notifier).update((state) => result.toSimpleString());
   }
 }

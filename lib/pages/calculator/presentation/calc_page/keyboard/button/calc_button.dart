@@ -1,5 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import '../../style.dart';
+import '../../../style.dart';
 
 class CalculButton extends StatelessWidget {
   const CalculButton({
@@ -30,33 +30,17 @@ class CalculButton extends StatelessWidget {
         child: NeumorphicButton(
           drawSurfaceAboveChild: true,
           margin: const EdgeInsets.all(6),
-          style: const NeumorphicStyle(
-            lightSource: LightSource.topRight,
-            shape: NeumorphicShape.concave,
-            color: Colors.grey,
-            depth: 8,
-            surfaceIntensity: 5,
-            // border: NeumorphicBorder(isEnabled: true, width: 0.7, color: Colors.white24),
-            boxShape: NeumorphicBoxShape.circle(),
-            intensity: 0.27,
-          ),
+          style: buttonsStyle,
           // margin: const EdgeInsets.all(5),
           onPressed: () {
             onPressed();
           },
           child: Center(
-            child: Container(
-              // width: 10,
-              // height: 10,
-              decoration: const BoxDecoration(
-                // color: Colors.red,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(50),
-                ),
-              ),
+            child: FittedBox(
               child: child ??
                   Text(
                     value,
+                    textAlign: TextAlign.center,
                     style: buttonsText,
                   ),
             ),

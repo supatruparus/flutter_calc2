@@ -1,4 +1,4 @@
-import '../../presentation/keyboard/button/calc_button.dart';
+import '../../presentation/calc_page/keyboard/button/calc_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
@@ -230,7 +230,7 @@ class CalcKeyboard extends StatelessWidget {
                 rowStart: 4,
                 columnStart: 2,
                 child: CalculButton(
-                  value: ',',
+                  value: '.',
                   size: buttonsSize,
                   style: buttonsStyle,
                   onPressed: () {

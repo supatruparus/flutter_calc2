@@ -3,7 +3,7 @@ import 'package:arch_test/pages/calculator/widgets/calc_keyboard/calc_keyboard.d
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/key_bindings.dart';
+import '../../../data/key_bindings.dart';
 
 class Keyboard extends StatelessWidget {
   const Keyboard({

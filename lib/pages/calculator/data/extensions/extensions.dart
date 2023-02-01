@@ -1,4 +1,4 @@
-import 'package:arch_test/pages/calculator/const.dart';
+import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:flutter/material.dart';
 
 extension IsWhole on double {

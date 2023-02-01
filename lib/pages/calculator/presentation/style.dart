@@ -1,4 +1,19 @@
+import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
+class _Style extends BoxDecoration {
+  const _Style(
+      {super.border,
+      super.borderRadius,
+      super.gradient,
+      this.padding = EdgeInsets.zero,
+      this.textStyle});
+  final TextStyle? textStyle;
+  final EdgeInsets padding;
+}
+
+var primaryColor = Colors.lightBlueAccent;
 
 TextStyle inputStyle = const TextStyle(
     fontFamily: 'Changa',
@@ -15,16 +30,34 @@ BoxDecoration circButton = BoxDecoration(
     ],
     borderRadius: const BorderRadius.all(Radius.circular(50)));
 
-Color backgroundColor = const Color.fromRGBO(36, 36, 36, 1);
-
 const TextStyle buttonsText = TextStyle(
   fontFamily: 'Changa',
-  // fontSize: 36,
+  fontWeight: FontWeight.bold,
   color: Colors.black,
 );
+final buttonsStyle = NeumorphicStyle(
+  lightSource: LightSource.topRight,
+  shape: NeumorphicShape.concave,
+  color: primaryColor,
+  depth: 8,
+  surfaceIntensity: 5,
+  boxShape: NeumorphicBoxShape.circle(),
+  intensity: 0.27,
+);
+const resultStyle = _Style(
+  textStyle: TextStyle(
+      fontFamily: 'Changa',
+      fontSize: 56,
+      height: 1,
+      shadows: [Shadow(offset: Offset(1, 4), color: Colors.white12, blurRadius: 10)]),
+  gradient: LinearGradient(colors: []),
+);
 
-const TextStyle resultText = TextStyle(
-    fontFamily: 'Changa',
-    fontSize: 56,
-    height: 1,
-    shadows: [Shadow(offset: Offset(1, 4), color: Colors.white12, blurRadius: 10)]);
+final screenStyle = _Style(
+    textStyle: const TextStyle(),
+    padding: const EdgeInsets.only(right: 12),
+    gradient: LinearGradient(
+        colors: [MyColors.darkGrey, MyColors.screenTop],
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter));
+final backgroundColor = MyColors.darkGrey;
