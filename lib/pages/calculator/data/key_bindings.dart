@@ -1,6 +1,5 @@
 import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:arch_test/pages/calculator/data/extensions/extensions.dart';
-import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
 import 'package:arch_test/pages/calculator/data/result.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -34,7 +33,7 @@ class KeyBindings implements CalcKeysBinding {
   }
 
   @override
-  void onRemove() {
+  void onRemove() async {
     _onTap();
     inputController.text = inputController.text.removeLast();
     if (inputController.text.hasSign(calcOperators) &&
@@ -52,13 +51,13 @@ class KeyBindings implements CalcKeysBinding {
   }
 
   @override
-  void onMinus() {
+  void onMinus() async {
     _onTap();
     inputSign('-');
   }
 
   @override
-  void onMultiply() {
+  void onMultiply() async {
     Vibration.vibrate(duration: 50, amplitude: 20);
     inputFocus.unfocus();
     inputSign('×');
@@ -87,7 +86,7 @@ class KeyBindings implements CalcKeysBinding {
       inputController.clear();
     }
 
-    resultSize.set(64);
+    resultSize.set(false);
     ref.read(inputControllerProvider).text = ref.read(inputControllerProvider).text + string;
 
     if (inputController.text.hasSign(calcOperators)) {
@@ -98,27 +97,32 @@ class KeyBindings implements CalcKeysBinding {
   }
 
   @override
-  void onEqual() {
+  void onEqual() async {
     _onTap();
-    resultSize.set(96);
+    if (!inputController.text.characters.last.isOperator) {
+      ///если последний символ не оператор
+      resultSize.set(true);
+    }
   }
 
   inputSign(String sign) {
     Vibration.vibrate(duration: 50, amplitude: 20);
     inputFocus.unfocus();
-    if (resultSize.isActive) {
-      inputController.clear();
-      inputController.text = result;
+    if (inputController.text.isNotEmpty) {
+      if (resultSize.isActive) {
+        inputController.clear();
+        inputController.text = result;
+      }
+      //
+      if (inputController.text.characters.last.isOperator) {
+        ///заменить знак
+        inputController.text = inputController.text.replaceLast(sign);
+      } else {
+        ///добавить знак
+        inputController.text = inputController.text + sign;
+      }
+      resultSize.set(false);
     }
-    //
-    if (inputController.text.characters.last.isOperator) {
-      ///заменить знак
-      inputController.text = inputController.text.replaceLast(sign);
-    } else {
-      ///добавить знак
-      inputController.text = inputController.text + sign;
-    }
-    resultSize.set(64);
   }
 
   _onTap() {

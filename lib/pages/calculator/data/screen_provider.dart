@@ -6,15 +6,15 @@ final inputFocusProvider = Provider<FocusNode>((ref) {
   return FocusNode();
 });
 
-final resultSizeProvide = StateProvider<double>((ref) {
-  return 48;
+final resultSizeProvide = StateProvider<bool>((ref) {
+  return false;
 });
 
 class ResultController {
   ResultController(this.ref);
   final WidgetRef ref;
 
-  set(double value) {
+  set(bool value) {
     ref.read(resultSizeProvide.notifier).update((state) => value);
   }
 
@@ -22,7 +22,11 @@ class ResultController {
 
   get watch => ref.read(resultProvider);
 
-  bool get isActive => ref.watch(resultSizeProvide) == 96 ? true : false;
+  set isActive(bool val) {
+    isActive = val;
+  }
+
+  bool get isActive => ref.watch(resultSizeProvide);
 }
 
 class ProviderController {

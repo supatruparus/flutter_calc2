@@ -1,5 +1,4 @@
 import 'package:arch_test/pages/calculator/data/const.dart';
-import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
 import 'package:arch_test/pages/calculator/data/result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +15,10 @@ extension CalcFormat on String {
     return formattedString;
   }
 }
+
+final inputControllerProvider = Provider<TextEditingController>((ref) {
+  return TextEditingController();
+});
 
 class CalculatorRepository {
   CalculatorRepository({required this.ref});

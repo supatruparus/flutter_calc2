@@ -1,9 +1,10 @@
-import 'package:arch_test/pages/calculator/data/input_controller_provider.dart';
 import 'package:arch_test/pages/calculator/data/screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:arch_test/pages/calculator/presentation/style.dart';
+
+import '../../../data/calculator_repository.dart';
 
 class Expression extends StatelessWidget {
   const Expression({
@@ -21,8 +22,6 @@ class Expression extends StatelessWidget {
         child: Center(
           child: Consumer(builder: (context, ref, child) {
             final inputStyle = ref.watch(themeNotifierProvider.select((value) => value.inputStyle));
-            final primaryColor =
-                ref.watch(themeNotifierProvider.select((value) => value.primaryColor));
             return TextField(
               keyboardType: TextInputType.none,
               textAlign: TextAlign.end,
@@ -30,7 +29,12 @@ class Expression extends StatelessWidget {
               focusNode: ref.read(inputFocusProvider),
               mouseCursor: SystemMouseCursors.none,
               maxLines: 2,
-              style: inputStyle.copyWith(color: Color.lerp(Colors.white, primaryColor, 0.3)),
+              style: inputStyle.copyWith(
+                color: Colors.white70,
+                shadows: [
+                  const Shadow(offset: Offset(-2, -2), color: Colors.white12, blurRadius: 10)
+                ],
+              ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),

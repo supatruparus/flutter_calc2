@@ -3,12 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class _Style extends BoxDecoration {
-  const _Style(
-      {super.border,
-      super.borderRadius,
-      super.gradient,
-      this.padding = EdgeInsets.zero,
-      this.textStyle});
+  const _Style({super.gradient, this.padding = EdgeInsets.zero, this.textStyle});
   final TextStyle? textStyle;
   final EdgeInsets padding;
 }
@@ -37,14 +32,14 @@ const resultStyle = _Style(
   gradient: LinearGradient(colors: []),
 );
 
-final screenStyle = _Style(
-    textStyle: const TextStyle(),
-    padding: const EdgeInsets.only(right: 12),
+const screenStyle = _Style(
+    textStyle: TextStyle(),
+    padding: EdgeInsets.only(right: 12),
     gradient: LinearGradient(
         colors: [MyColors.darkGrey, MyColors.screenTop],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter));
-final backgroundColor = MyColors.darkGrey;
+const backgroundColor = MyColors.darkGrey;
 
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, CalculatorTheme>((ref) {
   return ThemeNotifier();
@@ -52,15 +47,8 @@ final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, CalculatorThe
 
 class CalculatorTheme {
   CalculatorTheme({
-    this.buttonStyle = const NeumorphicStyle(
-      lightSource: LightSource.topRight,
-      shape: NeumorphicShape.convex,
-      color: Colors.red,
-      depth: 8,
-      surfaceIntensity: 5,
-      boxShape: NeumorphicBoxShape.circle(),
-      intensity: 0.27,
-    ),
+    this.backgroundColor = MyColors.darkGrey,
+    this.buttonStyle = const NeumorphicStyle(),
     this.primaryColor = Colors.grey,
     this.inputStyle = const TextStyle(
         fontFamily: 'Changa',
@@ -73,33 +61,36 @@ class CalculatorTheme {
         fontSize: 56,
         height: 1,
         shadows: [Shadow(offset: Offset(1, 4), color: Colors.white12, blurRadius: 10)]),
-    this.buttonsShape = NeumorphicShape.convex,
+    this.buttonsShape = NeumorphicShape.concave,
   });
+
   final Color primaryColor;
   final TextStyle resultText;
   final TextStyle inputStyle;
   final NeumorphicShape buttonsShape;
   final NeumorphicStyle buttonStyle;
+  final Color backgroundColor;
 
   CalculatorTheme copyWith({
     Color? primaryColor,
     TextStyle? resultText,
     TextStyle? inputStyle,
-    NeumorphicShape? buttonsShape,
     NeumorphicStyle? buttonStyle,
   }) {
     return CalculatorTheme(
       primaryColor: primaryColor ?? this.primaryColor,
       resultText: resultText ?? this.resultText,
       inputStyle: inputStyle ?? this.inputStyle,
-      buttonsShape: buttonsShape ?? this.buttonsShape,
       buttonStyle: buttonStyle ?? this.buttonStyle,
     );
   }
 }
 
 class ThemeNotifier extends StateNotifier<CalculatorTheme> {
-  ThemeNotifier() : super(CalculatorTheme());
+  ThemeNotifier()
+      : super(CalculatorTheme(
+          buttonStyle: MyNeuStyles.defaultStyle,
+        ));
 
   Color get primaryColor => state.primaryColor;
 
@@ -108,8 +99,14 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> {
     state = state.copyWith(buttonStyle: state.buttonStyle.copyWith(color: color));
   }
 
+  set depth(double value) {
+    state = state.copyWith(buttonStyle: state.buttonStyle.copyWith(depth: value));
+  }
+
+  double get depth => state.buttonStyle.depth ?? 0;
+
   setButtonShape(NeumorphicShape shape) {
-    state = state.copyWith(buttonsShape: shape);
+    state = state.copyWith(buttonStyle: state.buttonStyle.copyWith(shape: shape));
   }
 
   changeButtonStyle(NeumorphicStyle style) {
@@ -118,11 +115,40 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> {
 }
 
 class CalcThemeRepository {
-  setPrimaryColor(WidgetRef ref, Color color) {
+  static setPrimaryColor(WidgetRef ref, Color color) {
     ref.read(themeNotifierProvider.notifier).primaryColor = color;
   }
 
-  setButtonStyle(WidgetRef ref, NeumorphicStyle style) {
+  static setButtonStyle(WidgetRef ref, NeumorphicStyle style) {
     ref.read(themeNotifierProvider.notifier).changeButtonStyle(style);
+  }
+
+  static setButtonsShape(WidgetRef ref, NeumorphicShape shape) {
+    ref.read(themeNotifierProvider.notifier).setButtonShape(shape);
+  }
+
+  static setButtonDepth(WidgetRef ref, depth) {
+    setButtonStyle(
+        ref, ref.read(themeNotifierProvider.notifier).state.buttonStyle.copyWith(depth: depth));
+  }
+}
+
+extension Styles on NeumorphicButton {
+  concave() {
+    return NeumorphicButton(
+      style: const NeumorphicStyle(shape: NeumorphicShape.concave),
+    );
+  }
+
+  flat() {
+    return NeumorphicButton(
+      style: const NeumorphicStyle(shape: NeumorphicShape.flat),
+    );
+  }
+
+  circle() {
+    return NeumorphicButton(
+      style: const NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
+    );
   }
 }

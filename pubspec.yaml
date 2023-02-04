@@ -39,6 +39,8 @@ dependencies:
   flutter_riverpod: ^2.1.3
   flutter_layout_grid: ^2.0.1
   math_expressions: ^2.3.1
+  animated_text_kit: ^4.2.2
+
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding
@@ -50,6 +52,7 @@ dependencies:
   flutter_neumorphic: ^3.2.0
   vibration: ^1.7.6
   flex_color_picker: ^3.1.0
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:

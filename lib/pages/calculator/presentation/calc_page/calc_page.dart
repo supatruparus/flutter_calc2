@@ -15,15 +15,15 @@ class CalculatorPage extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: PageView(
-          children: [calcPage(), settingsPage],
+          children: const [CalcPage(), settingsPage],
         ),
       ),
     );
   }
 }
 
-class calcPage extends StatelessWidget {
-  const calcPage({
+class CalcPage extends StatelessWidget {
+  const CalcPage({
     super.key,
   });
 

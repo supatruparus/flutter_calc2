@@ -16,41 +16,45 @@ class Result extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       flex: flex,
-      child: Consumer(builder: (context, ref, child) {
-        final ResultController result = ResultController(ref);
-        final resultStyle = ref.watch(themeNotifierProvider.select((value) => value.resultText));
-        final primaryColor = ref.watch(themeNotifierProvider.select((value) => value.primaryColor));
-        final activeColor = Color.lerp(Colors.white, primaryColor, 0.6);
-        return Center(
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
-            width: double.infinity,
-            height: !result.isActive ? 64 : 100,
-            // color: Colors.grey,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              alignment: Alignment.centerRight,
-              child: Text(
-                ref.watch(resultProvider.select((value) => value.isNotEmpty ? '= $value' : '')),
-                maxLines: 1,
-                style: result.isActive
-                    ? resultStyle.copyWith(
-                        color: activeColor,
-                        shadows: [
-                          Shadow(
-                              offset: Offset(1, 4),
-                              color: activeColor?.withOpacity(0.3) ?? Colors.white12,
-                              blurRadius: 10)
-                        ],
-                      )
-                    : resultStyle.copyWith(color: Colors.white12),
-                textAlign: TextAlign.end,
-              ),
+      child: _animResult,
+    );
+  }
+
+  Consumer get _animResult {
+    return Consumer(builder: (context, ref, child) {
+      final ResultController result = ResultController(ref);
+      final resultStyle = ref.watch(themeNotifierProvider.select((value) => value.resultText));
+      final primaryColor = ref.watch(themeNotifierProvider.select((value) => value.primaryColor));
+      final activeColor = Color.lerp(Colors.white, primaryColor, 0.6);
+      return Center(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          width: double.infinity,
+          height: !result.isActive ? 64 : 100,
+          // color: Colors.grey,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            alignment: Alignment.centerRight,
+            child: Text(
+              ref.watch(resultProvider.select((value) => value.isNotEmpty ? '=$value' : '')),
+              maxLines: 1,
+              style: result.isActive
+                  ? resultStyle.copyWith(
+                      color: activeColor,
+                      shadows: [
+                        Shadow(
+                            offset: const Offset(1, 4),
+                            color: activeColor?.withOpacity(0.3) ?? Colors.white12,
+                            blurRadius: 10)
+                      ],
+                    )
+                  : resultStyle.copyWith(color: Colors.white12),
+              textAlign: TextAlign.end,
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }
