@@ -35,12 +35,15 @@ class KeyBindings implements CalcKeysBinding {
   @override
   void onRemove() async {
     _onTap();
-    inputController.text = inputController.text.removeLast();
-    if (inputController.text.containsSome(calcOperators) && !inputController.text.characters.last.isOperator) {
-      calculator.showResult();
-    } else {
-      calculator.result = '';
+    if(inputController.text.isNotEmpty){
+      inputController.text = inputController.text.removeLast();
+      if (inputController.text.containsSome(calcOperators) && !inputController.text.characters.last.isOperator) {
+        calculator.showResult();
+      } else {
+        calculator.result = '';
+      }
     }
+
   }
 
   @override

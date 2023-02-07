@@ -7,8 +7,19 @@ import 'package:arch_test/pages/calculator/presentation/style.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-extension FromBrigtness on Color{
-   Color fromBrigtness(){
+extension ToShape on Shape {
+ NeumorphicShape toNeuShape() {
+    Map<Shape, NeumorphicShape> map = {
+      Shape.concave: NeumorphicShape.concave,
+      Shape.convex: NeumorphicShape.convex,
+      Shape.flat: NeumorphicShape.flat
+    };
+    return map[this]!;
+  }
+}
+
+extension FromBrigtness on Color {
+  Color fromBrigtness() {
     return computeLuminance() <= 0.5 ? Colors.white70 : Colors.black87;
   }
 }
@@ -29,8 +40,10 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
     state = state.copyWith(buttonStyle: style);
   }
 
-  ThemeStorage themeStorage = const SharedPrefThemeStorage();
+  ThemeStorage themeStorage = SharedPrefThemeStorage();
   _getNeuShape(Shape shape) {
+
+
     switch (shape.index) {
       case 0:
         return NeumorphicShape.convex;
@@ -40,7 +53,6 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
         return NeumorphicShape.flat;
     }
   }
-
 
   TextStyle get buttonsText => MyTextStyles.changaMedium.copyWith(
         color: state.backgroundColor.computeLuminance() >= 0.5 ? Colors.white : Colors.black,
@@ -70,8 +82,10 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
   changePrimaryColor(Color color) {
     state = state.copyWith(
         textStyle: MyTextStyles.changaMedium.copyWith(color: color.fromBrigtness()),
-        buttonText: MyTextStyles.changaMedium.copyWith(color:color.fromBrigtness()),
-        primaryColor: color, backgroundColor: color, buttonStyle: state.buttonStyle.copyWith(color: color));
+        buttonText: MyTextStyles.changaMedium.copyWith(color: color.fromBrigtness()),
+        primaryColor: color,
+        backgroundColor: color,
+        buttonStyle: state.buttonStyle.copyWith(color: color));
   }
 
   @override
@@ -82,10 +96,13 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
   @override
   loadTheme() async {
     final params = await themeStorage.loadTheme();
+    print('theme loaded, params: ${params.toString()}');
     ('params: ${params.boxShape.toString()}');
     final color = params.primaryColor;
     NeumorphicShape shape = _getNeuShape(params.buttonShape);
     NeumorphicBoxShape boxShape = await SharedPrefThemeStorage.getBoxShape();
+
+
     state = state.copyWith(
       buttonsAnimSpeed: 100,
       buttonText: MyTextStyles.changaMedium,
@@ -93,17 +110,15 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
         boxShape: boxShape,
         shape: shape,
         color: color,
-        intensity: 0.2,
-        depth: 3,
+        intensity: params.intencity,
+        depth: params.buttonDepth,
+
       ),
+
       primaryColor: params.primaryColor,
-
-      backgroundColor: Color.lerp(params.primaryColor, Colors.white, 0.04),
+      backgroundColor: Color.lerp(params.primaryColor, Colors.white, 0.05),
     );
-
-
   }
-
 
   @override
   Color get primaryColor => state.primaryColor;

@@ -1,4 +1,3 @@
-import 'package:arch_test/pages/calculator/data/storage/shared_preferences.dart';
 import 'package:arch_test/pages/calculator/presentation/settings_page/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -7,16 +6,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/repositories/calc_theme_repository_impl.dart';
 import 'calc_page/calc_page.dart';
 
-class _Calculator extends ConsumerStatefulWidget {
-  const _Calculator({Key? key}) : super(key: key);
+class Calculator extends ConsumerStatefulWidget {
+  const Calculator({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  ConsumerState<_Calculator> createState() => _CalculatorState();
+  ConsumerState<Calculator> createState() => _CalculatorState();
 }
 
-class _CalculatorState extends ConsumerState<_Calculator> {
-  final storage = const SharedPrefThemeStorage();
+class _CalculatorState extends ConsumerState<Calculator> {
   late final theme = ref.read(themeNotifierProvider.notifier);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -27,16 +28,20 @@ class _CalculatorState extends ConsumerState<_Calculator> {
               return Container();
 
             case ConnectionState.done:
-              return MaterialApp(
-                home: Scaffold(
-                  backgroundColor: theme.backgroundColor,
-                  body: SafeArea(
-                    child: PageView(
-                      children: const [CalcPage(), SettingsScreen()],
+              return Consumer(builder: (context, ref, child) {
+                return MaterialApp(
+                  theme:
+                      ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: ref.watch(themeNotifierProvider.select((value) => value.primaryColor)))),
+                  home: Scaffold(
+                    backgroundColor: ref.watch(themeNotifierProvider.select((value) => value.backgroundColor)),
+                    body: SafeArea(
+                      child: PageView(
+                        children: const [CalcPage(), SettingsScreen()],
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              });
 
             case ConnectionState.none:
               return Container(
@@ -49,5 +54,3 @@ class _CalculatorState extends ConsumerState<_Calculator> {
         });
   }
 }
-
-const calculator = _Calculator();

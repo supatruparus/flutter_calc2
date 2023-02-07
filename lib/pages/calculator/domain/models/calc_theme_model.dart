@@ -7,7 +7,7 @@ class CalculatorTheme {
     this.primaryColor = Colors.blue,
     this.textStyle,
     this.screenColor,
-    this.buttonText,
+    this.buttonText = const TextStyle(),
     this.buttonsAnimSpeed = 200,
     this.inputStyle = const TextStyle(
         fontFamily: 'Changa',
@@ -28,7 +28,7 @@ class CalculatorTheme {
   final Color primaryColor;
   final TextStyle? textStyle;
   final Color? screenColor;
-  final TextStyle? buttonText;
+  final TextStyle buttonText;
   final int buttonsAnimSpeed;
 
   CalculatorTheme copyWith({

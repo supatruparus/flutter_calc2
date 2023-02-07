@@ -3,6 +3,7 @@
 import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:arch_test/pages/calculator/data/storage/button_params_model.dart';
 import 'package:arch_test/pages/calculator/data/storage/storage_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,15 +23,24 @@ extension GetIndex on NeumorphicBoxShape {
     return boxShapeIndex;
   }
 }
+// final SharedPrefProvider = Provider<SharedPreferences?>((ref) {
+//   return null;
+// });
+
+
 
  class SharedPrefThemeStorage implements ThemeStorage {
-  const SharedPrefThemeStorage();
+   SharedPrefThemeStorage(){
+     SharedPreferences.getInstance().then((value) => sharedPref = value);
+   }
+  late final SharedPreferences sharedPref;
   static const String _PRIMARY_COLOR = 'primaryColor';
   static const String _BOX_SHAPE = 'boxShape';
   static const String _DEPTH = 'depth';
   static const String _BGCOLOR = 'backgroundColor';
   static const String _SHAPE = 'buttonShape';
   static const String _INTENSITY = 'intensity';
+  static const String _SURFACE_INTENSITY = 'surface_intensity';
 
   static Future<Color> getBackgroundColor() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
@@ -47,17 +57,38 @@ extension GetIndex on NeumorphicBoxShape {
       return Color(intColor);
     }
   }
-  _saveIntensity(double val)async{
-    await SharedPreferences.getInstance()
-        ..setDouble(_INTENSITY, val);
+  _saveIntensity(double value)async{
+    bool isSaved = await sharedPref.setDouble(_INTENSITY, value);
+    if(isSaved){
+      print('intencity saved: $value');
+    }
   }
+  double? _getIntensity() {
+    return sharedPref.getDouble(_INTENSITY);
+  }
+  _saveSurfaceIntensity(double value)async{
+    bool isSaved = await sharedPref.setDouble(_SURFACE_INTENSITY, value);
+    if(isSaved) print('surfaceIntencity saved: $value');
+  }
+  double _getSurfaceIntensity() {
+    final double? value =  sharedPref.getDouble(_SURFACE_INTENSITY);
+    if(value==null){
+      if (kDebugMode) {
+        print("can't get value surfaceIntencity");
+      }
+      return 0.2;
+    } else{
+      return value;
+    }
+  }
+
 
   static savePrimaryColor(Color color) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setInt(_PRIMARY_COLOR, color.value);
   }
 
-  saveButtonShape(NeumorphicShape shape) async {
+  static saveButtonShape(NeumorphicShape shape) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setInt(_SHAPE, shape.index);
   }
@@ -100,10 +131,21 @@ extension GetIndex on NeumorphicBoxShape {
     }
   }
 
+  _getButtonsDepth(){
+    final double? value =  sharedPref.getDouble(_DEPTH);
+    if(value==null){
+      print("can't get value depth");
+      return 3;
+    } else{
+      return value;
+    }
+  }
+
   static saveButtonsDepth(double depth) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setDouble(_DEPTH, depth);
   }
+
 
   @override
   Future<CalcThemeParams> loadTheme() async {
@@ -111,11 +153,17 @@ extension GetIndex on NeumorphicBoxShape {
     Color backgroundColor = await getBackgroundColor();
     NeumorphicBoxShape boxShape = await getBoxShape();
     Shape buttonShape = await getButtonShape();
+    double depth = await _getButtonsDepth();
+    double intensity = _getIntensity() ?? 0.2;
+    double surfaceIntensity =  _getSurfaceIntensity();
 
     return CalcThemeParams(
         primaryColor: primaryColor,
         backgroundColor: backgroundColor,
         boxShape: boxShape,
+        intencity: intensity,
+        surfaceIntencity:surfaceIntensity,
+        buttonDepth: depth,
         buttonShape: buttonShape);
   }
 
@@ -131,7 +179,11 @@ extension GetIndex on NeumorphicBoxShape {
     }
     if(params.intencity!=null){
       _saveIntensity(params.intencity!);
+
     }
+    if(params.buttonDepth!= null)saveButtonsDepth(params.buttonDepth!);
+    if(params.surfaceIntencity!=null)_saveSurfaceIntensity(params.surfaceIntencity!);
+
     return true;
   }
 }

@@ -10,10 +10,12 @@ class CalcKeyboard extends StatelessWidget {
     required this.controller,
     this.buttonsStyle,
     this.buttonsSize = double.infinity,
+    required this.contentColor,
   }) : super(key: key);
   final CalcKeysBinding controller;
   final double? buttonsSize;
   final NeumorphicStyle? buttonsStyle;
+  final Color contentColor;
   // final Widget button;
 
   @override
@@ -56,9 +58,10 @@ class CalcKeyboard extends StatelessWidget {
                   onPressed: controller.onRemove,
                   size: buttonsSize,
                   style: buttonsStyle,
-                  child: const Center(
+                  child: Center(
                       child: Icon(
                     Icons.backspace,
+                        color: contentColor,
                   )),
                 ),
               ),

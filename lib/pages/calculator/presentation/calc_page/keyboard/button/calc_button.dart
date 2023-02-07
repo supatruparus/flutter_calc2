@@ -24,33 +24,27 @@ class CalculatorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: Consumer(builder: (context, ref, child) {
-          int animSpeed = ref.watch(themeNotifierProvider.select((value) => value.buttonsAnimSpeed));
-          // print('animspeed: $animSpeed');
-          return NeumorphicButton(
-            duration: Duration(milliseconds: animSpeed),
-            drawSurfaceAboveChild: true,
-            margin: const EdgeInsets.all(6),
+    return Consumer(builder: (context, ref, child) {
+      int animSpeed = ref.watch(themeNotifierProvider.select((value) => value.buttonsAnimSpeed));
+      return NeumorphicButton(
+        duration: Duration(milliseconds: animSpeed),
+        drawSurfaceAboveChild: false,
+        margin: const EdgeInsets.all(6),
 
-            style: style,
-            // margin: const EdgeInsets.all(5),
-            onPressed: () {
-              onPressed();
-            },
-            child: Center(
-              child: this.child ??
-                  _ButtonText(
-                    value,
-                  ),
-            ),
-          );
-        }),
-      ),
-    );
+        style: style,
+        onPressed: () {
+          onPressed();
+        },
+        child: Container(
+          alignment: Alignment.center,
+          // color: Colors.green,
+          child: this.child ??
+              _ButtonText(
+                value,
+              ),
+        ),
+      );
+    });
   }
 }
 
@@ -66,6 +60,7 @@ class _ButtonText extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) => Text(
         data,
+        textAlign: TextAlign.center,
         style: ref.watch(themeNotifierProvider.select((value) => value.buttonText))
 
     ));
