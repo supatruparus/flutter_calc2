@@ -15,10 +15,10 @@ class _Calculator extends ConsumerStatefulWidget {
 }
 
 class _CalculatorState extends ConsumerState<_Calculator> {
-  final storage = const SharedPrefThemeStorage();
   late final theme = ref.read(themeNotifierProvider.notifier);
   @override
   Widget build(BuildContext context) {
+    final storage = SharedPrefThemeStorage();
     return FutureBuilder(
         future: theme.loadTheme(),
         builder: (context, snapshot) {

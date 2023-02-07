@@ -20,11 +20,13 @@ class Keyboard extends StatelessWidget {
       flex: flex,
       child: Consumer(builder: (context, ref, child) {
         final buttonStyleProvider = ref.watch(themeNotifierProvider.select((value) => value.buttonStyle));
+        final textColor = ref.watch(themeNotifierProvider.select((value) => value.buttonText.color));
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: CalcKeyboard(
             controller: KeyBindings(ref),
             buttonsStyle: buttonStyleProvider,
+            contentColor: textColor ?? Colors.black,
           ),
         );
       }),

@@ -2,6 +2,7 @@ import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:arch_test/pages/calculator/data/storage/shared_preferences.dart';
 import 'package:arch_test/pages/calculator/data/storage/storage_interface.dart';
 import 'package:arch_test/pages/calculator/domain/repository/calc_theme_repository.dart';
+import 'package:arch_test/pages/calculator/presentation/widgets/my_neu_checkbox.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/calc_theme_repository_impl.dart';
@@ -11,24 +12,23 @@ import '../widgets/my_slider.dart';
 
 
 
-
-
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({
     Key? key,
   }) : super(key: key);
 
-  final ThemeStorage storage = const SharedPrefThemeStorage();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ThemeStorage storage = SharedPrefThemeStorage();
     final CalcThemeRepository calcThemeRepository = ref.read(themeNotifierProvider.notifier);
+    final buttonStyle = ref.read(themeNotifierProvider.select((value) => value.buttonStyle));
     return SafeArea(
         child: ListView(
       children: [
         MyColorPicker(
           startColor: calcThemeRepository.primaryColor,
-          onChange: (color) async {
+          onChange: (color) async{
             calcThemeRepository.changePrimaryColor(color);
           },
           onChangeEnd: (newColor) async {
@@ -48,6 +48,8 @@ class SettingsScreen extends ConsumerWidget {
           min: 0,
           max: 1,
           title: 'intensity',
+          startValue: calcThemeRepository.buttonStyle.intensity,
+
           onChanged: (percent) {
 
             calcThemeRepository.buttonStyle = calcThemeRepository.buttonStyle.copyWith(intensity: percent);
@@ -68,7 +70,8 @@ class SettingsScreen extends ConsumerWidget {
           },
         ),
         SliderWithTitle(
-          title: 'surface',
+          title: 'surface intencity',
+          startValue: buttonStyle.surfaceIntensity,
           onChanged: (percent) => calcThemeRepository.buttonStyle = calcThemeRepository.buttonStyle.copyWith(surfaceIntensity: percent),
           onChangeEnd: (percent) => storage.saveTheme(CalcThemeParams(surfaceIntencity: percent )),
         ),
@@ -97,37 +100,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class MyNeuCheckbox extends StatefulWidget {
-  const MyNeuCheckbox({
-    super.key,
-    this.onChanged,
-    this.isEnabled = true,
-  });
-  final Function(bool val)? onChanged;
-  final bool isEnabled;
 
-  @override
-  State<MyNeuCheckbox> createState() => _MyNeuCheckboxState();
-}
-
-class _MyNeuCheckboxState extends State<MyNeuCheckbox> {
-  bool value = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicRadio(
-      value: value,
-      onChanged: (val) {
-        setState(() {
-          value = val ?? true;
-        });
-        widget.onChanged?.call(val ?? true);
-      },
-      isEnabled: widget.isEnabled,
-      child: const StyledText('concave'),
-    );
-  }
-}
 
 
 
