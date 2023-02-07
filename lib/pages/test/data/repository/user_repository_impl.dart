@@ -1,43 +1,22 @@
 import 'package:arch_test/pages/test/domain/models/SaveUserNameParams.dart';
-import 'package:arch_test/pages/test/domain/repository/user_repository.dart';
-import 'package:flutter/foundation.dart';
+import 'package:arch_test/pages/test/domain/models/user_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../domain/models/user_model.dart';
+import '../../domain/repository/user_repository.dart';
+import '../storage/storage.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  const UserRepositoryImpl();
-  final String SPKEY_FIRSTNAME = 'firstNameKEY';
-  Future<SharedPreferences> loadSP() async {
-    return await SharedPreferences.getInstance();
-  }
-
+  const UserRepositoryImpl({required this.userStorage});
+  final UserStorage userStorage;
   @override
-  bool saveName({required SaveUserNameParams param}) {
-    if (param.name.isNotEmpty) {
-      loadSP().then((sp) {
-        sp.setString(SPKEY_FIRSTNAME, param.name).then((value) => value == true
-            ? print('firstNameSaved : ${param.name}')
-            : print('Не удалось сохранить'));
-      });
-      return true;
-    } else {
-      throw FlutterError('name is empty');
-    }
+  saveName({required SaveUserNameParams param}) {
+    userStorage.save(param: param);
   }
 
   @override
   Future<UserName> getName() async {
-    final sp = await SharedPreferences.getInstance();
-
-    String? firstName = sp.getString(SPKEY_FIRSTNAME);
-    if (firstName != null) {
-      print('first name: $firstName');
-      return UserName(firstName: firstName, lastname: 'Petrov');
-    } else {
-      throw FlutterError('Null firstName value');
-    }
+    final user = await userStorage.get();
+    return UserName(firstName: user.firstName, lastname: user.lastName);
   }
 }
 

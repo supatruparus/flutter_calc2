@@ -8,7 +8,7 @@ Icon get myIconClose {
   );
 }
 
-SizedBox get _buildIcon {
+Widget get neuIcon {
   return SizedBox(
     width: 200,
     height: 200,

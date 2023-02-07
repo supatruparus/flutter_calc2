@@ -1,5 +1,6 @@
 class SaveUserNameParams {
-  SaveUserNameParams({this.name = ''});
+  SaveUserNameParams({this.firstName = '', this.lastName = ''});
 
-  final String name;
+  final String firstName;
+  final String lastName;
 }

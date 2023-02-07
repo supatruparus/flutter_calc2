@@ -1,3 +1,5 @@
+import 'package:arch_test/pages/test/data/storage/SharedPrefUserStorage.dart';
+import 'package:arch_test/pages/test/data/storage/fake_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'repository/user_repository_impl.dart';
@@ -6,8 +8,10 @@ import '../domain/usecases/get_user_usecase.dart';
 import '../domain/usecases/save_user_usecase.dart';
 
 class TestPageViewModel {
-  const TestPageViewModel(
-      {required this.getUserUseCase, required this.saveUserNameUseCase, required this.ref});
+  TestPageViewModel(
+      {required this.getUserUseCase, required this.saveUserNameUseCase, required this.ref}) {
+    showUser();
+  }
   final ProviderRef ref;
   final GetUserUseCase getUserUseCase;
   final SaveUserNameUseCase saveUserNameUseCase;
@@ -17,21 +21,33 @@ class TestPageViewModel {
     ref.read(textFieldProvider.notifier).update((state) => text);
   }
 
-  saveUser(String text) {
-    saveUserNameUseCase.execute(param: SaveUserNameParams(name: text));
+  onInputConfirm(String inputText) async {
+    final splitText = inputText.split(' ');
+
+    if (splitText.length == 2) {
+      String first = splitText[0];
+      String lastName = splitText[1];
+
+      final param = SaveUserNameParams(firstName: first, lastName: lastName);
+
+      SharedPrefUserStorage().save(param: param);
+    } else {
+      textField = 'введи два слова';
+    }
   }
 
   showUser() async {
-    final userName = await getUserUseCase.execute();
-    textField = 'userName: ${userName.firstName} ${userName.lastname}';
+    final userName = await SharedPrefUserStorage().get();
+    textField = 'userName: ${userName.firstName} ${userName.lastName}';
   }
 }
 
 final testPageViewModelProvider = Provider<TestPageViewModel>((ref) {
   return TestPageViewModel(
       ref: ref,
-      saveUserNameUseCase: const SaveUserNameUseCase(userRepository: UserRepositoryImpl()),
+      saveUserNameUseCase: SaveUserNameUseCase(
+          userRepository: UserRepositoryImpl(userStorage: SharedPrefUserStorage())),
       getUserUseCase: GetUserUseCase(
-        userRepository: const UserRepositoryImpl(),
+        userRepository: UserRepositoryImpl(userStorage: FakeStorage()),
       ));
 });

@@ -1,6 +1,5 @@
+import 'package:arch_test/pages/calculator/presentation/calc_page/keyboard/button/calc_button.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
-import '../../presentation/calc_page/keyboard/button/calc_button.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 import 'controller.dart';
@@ -11,10 +10,8 @@ class CalcKeyboard extends StatelessWidget {
     required this.controller,
     this.buttonsStyle,
     this.buttonsSize = double.infinity,
-    this.textColor = Colors.black,
   }) : super(key: key);
   final CalcKeysBinding controller;
-  final Color textColor;
   final double? buttonsSize;
   final NeumorphicStyle? buttonsStyle;
   // final Widget button;
@@ -33,7 +30,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 ///multiply button
                 rowStart: 1, columnStart: 3,
-                child: CalculButton(
+                child: CalculatorButton(
                   onPressed: controller.onMultiply,
                   value: '×',
                   size: buttonsSize,
@@ -46,7 +43,7 @@ class CalcKeyboard extends StatelessWidget {
 
                   rowStart: 4,
                   columnStart: 3,
-                  child: CalculButton(
+                  child: CalculatorButton(
                     onPressed: controller.onEqual,
                     value: '=',
                     size: buttonsSize,
@@ -55,21 +52,20 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 ///Remove button
                 rowStart: 0, columnStart: 2,
-                child: CalculButton(
+                child: CalculatorButton(
                   onPressed: controller.onRemove,
                   size: buttonsSize,
                   style: buttonsStyle,
-                  child: Center(
+                  child: const Center(
                       child: Icon(
                     Icons.backspace,
-                    color: textColor,
                   )),
                 ),
               ),
               GridPlacement(
                 rowStart: 0,
                 columnStart: 3,
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '/',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -77,7 +73,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: 'x²',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -87,7 +83,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 rowStart: 0,
                 columnStart: 0,
-                child: CalculButton(
+                child: CalculatorButton(
                   ///Clear button
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -96,7 +92,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '7',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -106,7 +102,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '8',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -116,7 +112,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '9',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -128,7 +124,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 rowStart: 2,
                 columnStart: 3,
-                child: CalculButton(
+                child: CalculatorButton(
                   onPressed: controller.onMinus,
                   value: '-',
                   size: buttonsSize,
@@ -136,7 +132,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '4',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -146,7 +142,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '5',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -156,7 +152,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '6',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -166,7 +162,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '1',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -176,7 +172,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '2',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -186,7 +182,7 @@ class CalcKeyboard extends StatelessWidget {
                 ),
               ),
               GridPlacement(
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '3',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -198,7 +194,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 rowStart: 3,
                 columnStart: 3,
-                child: CalculButton(
+                child: CalculatorButton(
                   onPressed: controller.onPlus,
                   value: '+',
                   size: buttonsSize,
@@ -208,7 +204,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 rowStart: 4,
                 columnStart: 0,
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '+/-',
                   size: buttonsSize,
                   style: buttonsStyle,
@@ -218,7 +214,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 rowStart: 4,
                 columnStart: 1,
-                child: CalculButton(
+                child: CalculatorButton(
                   onPressed: () {
                     controller.insert('0');
                   },
@@ -230,7 +226,7 @@ class CalcKeyboard extends StatelessWidget {
               GridPlacement(
                 rowStart: 4,
                 columnStart: 2,
-                child: CalculButton(
+                child: CalculatorButton(
                   value: '.',
                   size: buttonsSize,
                   style: buttonsStyle,

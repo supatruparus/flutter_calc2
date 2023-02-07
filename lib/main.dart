@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:arch_test/pages/test/presentation/test_page.dart';
-import 'package:arch_test/pages/test/data/test_page_viewmodel.dart';
+import 'package:arch_test/pages/calculator/presentation/calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_size/window_size.dart';
@@ -23,16 +22,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.dark().copyWith(
-          textTheme: const TextTheme(bodyMedium: TextStyle(fontSize: 33)),
-          colorScheme: const ColorScheme.dark()),
-      home: Consumer(builder: (context, ref, child) {
-        return TestPage(
-          viewModel: ref.read(testPageViewModelProvider),
-        );
-      }),
-    );
+    return calculator;
   }
 }

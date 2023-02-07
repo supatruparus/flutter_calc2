@@ -1,102 +1,174 @@
 import 'package:arch_test/pages/calculator/data/const.dart';
-import 'package:arch_test/pages/calculator/data/shared_preferences.dart';
-import 'package:arch_test/pages/calculator/presentation/style.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:arch_test/pages/calculator/data/storage/shared_preferences.dart';
+import 'package:arch_test/pages/calculator/data/storage/storage_interface.dart';
+import 'package:arch_test/pages/calculator/domain/repository/calc_theme_repository.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/repositories/calc_theme_repository_impl.dart';
+import '../widgets/my_widgets.dart';
+import '../widgets/my_color_picker.dart';
+import '../widgets/my_slider.dart';
 
-class _SettingsScreen extends ConsumerWidget {
-  const _SettingsScreen({
+
+
+
+
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({
     Key? key,
-    required this.onChangeColor,
-    required this.onChangeStyle,
-    required this.onDepthChange,
   }) : super(key: key);
-  final Function(Color color) onChangeColor;
-  final Function(NeumorphicStyle) onChangeStyle;
-  final Function(double value) onDepthChange;
+
+  final ThemeStorage storage = const SharedPrefThemeStorage();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final depthSlider = _DepthSlider(
-      onChange: (percent) {
-        onDepthChange(percent);
-      },
-    );
-    return Scaffold(
-      body: SafeArea(
-          child: Column(
-        children: [
-          ColorPicker(onColorChanged: (value) => onChangeColor(value)),
-          _ButtonSetter(onChangStyle: (style) {
-            onChangeStyle(style);
-          }),
-          const SizedBox(
-            height: 30,
-          ),
-          depthSlider,
-          NeumorphicButton(
-            style: MyNeuStyles.defaultStyle,
-            child: Text(
-              'по умолчанию',
-              style: Theme.of(context).textTheme.bodySmall,
+    final CalcThemeRepository calcThemeRepository = ref.read(themeNotifierProvider.notifier);
+    return SafeArea(
+        child: ListView(
+      children: [
+        MyColorPicker(
+          startColor: calcThemeRepository.primaryColor,
+          onChange: (color) async {
+            calcThemeRepository.changePrimaryColor(color);
+          },
+          onChangeEnd: (newColor) async {
+
+            storage.saveTheme(CalcThemeParams(primaryColor: newColor));
+          } ,
+        ),
+        _ButtonSetter(onClick: (style) {
+          calcThemeRepository.buttonStyle = style;
+          storage.saveTheme(CalcThemeParams( boxShape: style.boxShape, buttonShape: style.shape));
+
+        }),
+        const SizedBox(
+          height: 30,
+        ),
+        SliderWithTitle(
+          min: 0,
+          max: 1,
+          title: 'intensity',
+          onChanged: (percent) {
+
+            calcThemeRepository.buttonStyle = calcThemeRepository.buttonStyle.copyWith(intensity: percent);
+
+          },
+          onChangeEnd: (percent) {
+            storage.saveTheme(CalcThemeParams(intencity: percent));
+          },
+        ),
+        SliderWithTitle(
+          min: -20,
+          max: 20,
+          startValue: calcThemeRepository.buttonStyle.depth,
+          title: 'depth',
+          onChanged: (percent) => calcThemeRepository.buttonStyle = calcThemeRepository.buttonStyle.copyWith(depth: percent),
+          onChangeEnd: (percent) {
+            storage.saveTheme(CalcThemeParams(buttonDepth: percent));
+          },
+        ),
+        SliderWithTitle(
+          title: 'surface',
+          onChanged: (percent) => calcThemeRepository.buttonStyle = calcThemeRepository.buttonStyle.copyWith(surfaceIntensity: percent),
+          onChangeEnd: (percent) => storage.saveTheme(CalcThemeParams(surfaceIntencity: percent )),
+        ),
+        _DefaultButton(
+          onChangeStyle: (style) {
+            calcThemeRepository.buttonStyle = style;
+            storage.saveTheme(CalcThemeParams(buttonShape: style.shape, boxShape: style.boxShape, primaryColor: style.color, intencity: style.intensity, buttonDepth: style.depth,surfaceIntencity: style.intensity));
+
+          },
+        ),
+        Row(
+          children: [
+            MyNeuCheckbox(
+              isEnabled: true,
+              onChanged: (val) {
+              },
             ),
-            onPressed: () {
-              onChangeStyle(MyNeuStyles.defaultStyle);
-            },
-          )
-        ],
-      )),
+            MyNeuCheckbox(
+              isEnabled: true,
+              onChanged: (val) {},
+            )
+          ],
+        )
+      ],
+    ));
+  }
+}
+
+class MyNeuCheckbox extends StatefulWidget {
+  const MyNeuCheckbox({
+    super.key,
+    this.onChanged,
+    this.isEnabled = true,
+  });
+  final Function(bool val)? onChanged;
+  final bool isEnabled;
+
+  @override
+  State<MyNeuCheckbox> createState() => _MyNeuCheckboxState();
+}
+
+class _MyNeuCheckboxState extends State<MyNeuCheckbox> {
+  bool value = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return NeumorphicRadio(
+      value: value,
+      onChanged: (val) {
+        setState(() {
+          value = val ?? true;
+        });
+        widget.onChanged?.call(val ?? true);
+      },
+      isEnabled: widget.isEnabled,
+      child: const StyledText('concave'),
     );
   }
 }
 
-class _DepthSlider extends ConsumerStatefulWidget {
-  const _DepthSlider({Key? key, required this.onChange}) : super(key: key);
 
-  final Function(double percent) onChange;
+
+class _DepthSlider extends StatefulWidget {
+  const _DepthSlider({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<_DepthSlider> createState() => _DepthSliderState();
+  State<_DepthSlider> createState() => _DepthSliderState();
 }
 
-class _DepthSliderState extends ConsumerState<_DepthSlider> {
-  double value = 10;
+class _DepthSliderState extends State<_DepthSlider> {
   @override
   Widget build(BuildContext context) {
-    value = ref.watch(themeNotifierProvider).buttonStyle.depth ?? 0;
-    return Column(
-      children: [
-        NeumorphicText(
-          'depth:',
-          textAlign: TextAlign.center,
-          textStyle: NeumorphicTextStyle(fontSize: 30, letterSpacing: 10),
-        ),
-        Consumer(builder: (context, ref, child) {
-          return Slider(
-            activeColor:
-                ref.watch(themeNotifierProvider.select((value) => value.buttonStyle.color)),
-            onChanged: (percent) async {
-              setState(() {
-                value = percent;
-                widget.onChange(percent);
-              });
-            },
-            onChangeStart: (percent) {},
-            onChangeEnd: (percent) {},
-            min: 0,
-            max: 20,
-            value: value,
-          );
-        }),
-      ],
+    return Container();
+  }
+}
+
+class _DefaultButton extends StatelessWidget {
+  const _DefaultButton({
+    required this.onChangeStyle,
+  });
+
+  final Function(NeumorphicStyle style) onChangeStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return NeumorphicButton(
+      style: MyNeuStyles.defaultStyle,
+      child: const StyledText(
+        'по умолчанию',
+      ),
+      onPressed: () {
+        onChangeStyle(MyNeuStyles.defaultStyle);
+      },
     );
   }
 }
 
 class _ButtonSetter extends ConsumerStatefulWidget {
-  const _ButtonSetter({Key? key, required this.onChangStyle}) : super(key: key);
-  final Function(NeumorphicStyle style) onChangStyle;
+  const _ButtonSetter({Key? key, required this.onClick}) : super(key: key);
+  final Function(NeumorphicStyle style) onClick;
 
   @override
   ConsumerState<_ButtonSetter> createState() => _ButtonSetterState();
@@ -110,14 +182,15 @@ class _ButtonSetterState extends ConsumerState<_ButtonSetter> {
     setState(() {
       style = selectedStyle;
     });
-    widget.onChangStyle(style);
+    widget.onClick(style);
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
       style = ref.watch(themeNotifierProvider.select((value) => value.buttonStyle));
-      final primaryColor = ref.watch(themeNotifierProvider.select((value) => value.primaryColor));
+      final CalcThemeRepository themeRepository = ref.watch(themeNotifierProvider.notifier);
+      final primaryColor = themeRepository.primaryColor;
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -127,113 +200,39 @@ class _ButtonSetterState extends ConsumerState<_ButtonSetter> {
                   index = 1;
                 });
                 onSelect(
-                    selectedStyle: style.copyWith(
-                        shape: NeumorphicShape.concave,
-                        boxShape: const NeumorphicBoxShape.circle()));
+                    selectedStyle: style.copyWith(color: primaryColor, shape: NeumorphicShape.concave, boxShape: const NeumorphicBoxShape.circle()));
               },
               isEnabled: index == 1,
-              style: style.copyWith(
-                  shape: NeumorphicShape.concave, boxShape: const NeumorphicBoxShape.circle())),
+              style: style.copyWith(color: primaryColor, shape: NeumorphicShape.concave, boxShape: const NeumorphicBoxShape.circle())),
           buttonExample(
-              style: style.copyWith(
-                  shape: NeumorphicShape.convex, boxShape: const NeumorphicBoxShape.circle()),
+              style: themeRepository.buttonStyle.copyWith(shape: NeumorphicShape.convex, boxShape: const NeumorphicBoxShape.circle()),
               isEnabled: index == 2,
               onTap: () {
                 setState(() {
                   index = 2;
                 });
-                onSelect(
-                    selectedStyle: style.copyWith(
-                        shape: NeumorphicShape.convex,
-                        boxShape: const NeumorphicBoxShape.circle()));
+                onSelect(selectedStyle: style.copyWith(shape: NeumorphicShape.convex, boxShape: const NeumorphicBoxShape.circle()));
               }),
           buttonExample(
-            style: style.copyWith(
-                boxShape: const NeumorphicBoxShape.circle(), shape: NeumorphicShape.flat),
+            style: style.copyWith(color: primaryColor, boxShape: const NeumorphicBoxShape.circle(), shape: NeumorphicShape.flat),
             onTap: () {
               setState(() {
                 index = 3;
               });
-              onSelect(
-                  selectedStyle: style.copyWith(
-                      shape: NeumorphicShape.flat, boxShape: const NeumorphicBoxShape.circle()));
+              onSelect(selectedStyle: style.copyWith(shape: NeumorphicShape.flat, boxShape: const NeumorphicBoxShape.circle()));
             },
             isEnabled: index == 3,
           ),
           buttonExample(
-              style: style.copyWith(
-                  boxShape: const NeumorphicBoxShape.rect(),
-                  color: primaryColor,
-                  shape: NeumorphicShape.flat),
+              style: style.copyWith(boxShape: const NeumorphicBoxShape.rect(), color: primaryColor, shape: NeumorphicShape.flat),
               isEnabled: index == 4,
               onTap: () {
                 index = 4;
 
-                onSelect(
-                    selectedStyle: style.copyWith(
-                        shape: NeumorphicShape.flat, boxShape: const NeumorphicBoxShape.rect()));
+                onSelect(selectedStyle: style.copyWith(shape: NeumorphicShape.flat, boxShape: const NeumorphicBoxShape.rect()));
               })
         ],
       );
     });
   }
-}
-
-const settingsPage = _SettingPage();
-
-class _SettingPage extends ConsumerStatefulWidget {
-  const _SettingPage({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  ConsumerState createState() => __SettingPageState();
-}
-
-class __SettingPageState extends ConsumerState<_SettingPage> {
-  @override
-  Widget build(BuildContext context) {
-    final theme = ref.read(themeNotifierProvider.notifier);
-    return _SettingsScreen(
-      onChangeColor: (color) {
-        ref
-            .read(themeNotifierProvider.notifier)
-            .changeButtonStyle(ref.read(themeNotifierProvider).buttonStyle.copyWith(color: color));
-        theme.primaryColor = color;
-        MySharedPref.savePrimaryColor(color);
-      },
-      onChangeStyle: (style) {
-        theme.changeButtonStyle(style);
-        MySharedPref.saveBoxSape(style.boxShape ?? const NeumorphicBoxShape.circle());
-      },
-      onDepthChange: (value) {
-        theme.depth = value;
-        MySharedPref.saveButtonsDepth(value);
-      },
-    );
-  }
-}
-
-Widget buttonExample(
-    {double? size,
-    required NeumorphicStyle style,
-    String? text,
-    required bool isEnabled,
-    required Function() onTap}) {
-  return Consumer(builder: (context, ref, child) {
-    return NeumorphicButton(
-      // isEnabled: isEnabled,
-      padding: const EdgeInsets.all(4),
-      style: style,
-
-      onPressed: onTap,
-      child: SizedBox(
-        width: size ?? 60,
-        height: size ?? 60,
-        child: const Center(
-          child: Icon(Icons.golf_course),
-        ),
-      ),
-    );
-  });
 }

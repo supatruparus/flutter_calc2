@@ -1,20 +1,15 @@
 import 'package:arch_test/pages/test/data/repository/user_repository_impl.dart';
-import 'package:arch_test/pages/test/domain/models/SaveUserNameParams.dart';
-import 'package:arch_test/pages/test/domain/usecases/get_user_usecase.dart';
-import 'package:arch_test/pages/test/domain/usecases/save_user_usecase.dart';
 import 'package:arch_test/pages/test/data/test_page_viewmodel.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parent_scale/main.dart';
 
-import '../domain/repository/user_repository.dart';
 
-class TestPage extends StatelessWidget {
+class TestPage extends ConsumerWidget {
   const TestPage({Key? key, required this.viewModel}) : super(key: key);
   final TestPageViewModel viewModel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Scaffold(
         backgroundColor: Colors.grey.shade500,
         body: SafeArea(
@@ -35,7 +30,7 @@ class TestPage extends StatelessWidget {
                     ),
                     TextField(
                       onSubmitted: (editText) {
-                        viewModel.saveUser(editText);
+                        viewModel.onInputConfirm(editText);
                       },
                     ),
                   ],

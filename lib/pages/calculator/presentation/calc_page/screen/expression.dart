@@ -1,10 +1,9 @@
-import 'package:arch_test/pages/calculator/data/screen_provider.dart';
+import 'package:arch_test/pages/calculator/data/providers/screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:arch_test/pages/calculator/presentation/style.dart';
-
 import '../../../data/calculator_repository.dart';
+import 'package:arch_test/pages/calculator/data/repositories/calc_theme_repository_impl.dart';
 
 class Expression extends StatelessWidget {
   const Expression({

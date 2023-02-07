@@ -1,5 +1,6 @@
 import 'package:arch_test/pages/calculator/data/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 extension IsWhole on double {
   bool get isWhole {
@@ -11,13 +12,24 @@ extension IsWhole on double {
   }
 }
 
-extension SimpleString on double {
+extension IsWholeNum on num {
+  bool get isWhole {
+    if (this % 1 == 0 || this == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+extension SimpleString on num {
   String toSimpleString() {
     if (isWhole || this == 0) {
       return toInt().toString();
     } else {
-      return toString();
+      return toStringAsFixed(6);
     }
+
   }
 }
 
@@ -28,7 +40,11 @@ extension Replace on String {
 }
 
 extension HasSign on String {
-  bool hasSign(List<String> characters) {
+  bool containsSome(List<String> characters) {
+    ///Check if string contains something from array
+    ///String str = '2+2'
+    ///str.contains(['+', '-', '*']) / returns true
+
     bool isHasSign = false;
     for (var char in this.characters) {
       if (char.isOperator) {
@@ -37,5 +53,13 @@ extension HasSign on String {
       } else {}
     }
     return isHasSign;
+  }
+}
+
+extension Goodtext on Text {
+  static goodText() {
+    return Consumer(
+      builder: (context, ref, child) => const Text('good'),
+    );
   }
 }

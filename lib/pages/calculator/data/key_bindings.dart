@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
-import '../widgets/calc_keyboard/controller.dart';
+import '../presentation/widgets/widgets/calc_keyboard/controller.dart';
 import 'calculator_repository.dart';
-import 'screen_provider.dart';
+import 'providers/screen_provider.dart';
 
 extension RemoveLast on String {
   String removeLast() {
@@ -22,7 +22,7 @@ class KeyBindings implements CalcKeysBinding {
 
   String get result => ref.read(resultProvider);
   ResultController get resultSize => ResultController(ref);
-  CalculatorRepository get calculator => CalculatorRepository(ref: ref);
+  MyMathRepository get calculator => MyMathRepository(ref: ref);
   TextEditingController get inputController => ref.read(inputControllerProvider);
   FocusNode get inputFocus => ref.read(inputFocusProvider);
 
@@ -36,8 +36,7 @@ class KeyBindings implements CalcKeysBinding {
   void onRemove() async {
     _onTap();
     inputController.text = inputController.text.removeLast();
-    if (inputController.text.hasSign(calcOperators) &&
-        !inputController.text.characters.last.isOperator) {
+    if (inputController.text.containsSome(calcOperators) && !inputController.text.characters.last.isOperator) {
       calculator.showResult();
     } else {
       calculator.result = '';
@@ -89,7 +88,7 @@ class KeyBindings implements CalcKeysBinding {
     resultSize.set(false);
     ref.read(inputControllerProvider).text = ref.read(inputControllerProvider).text + string;
 
-    if (inputController.text.hasSign(calcOperators)) {
+    if (inputController.text.containsSome(calcOperators)) {
       calculator.showResult();
     } else {
       ref.read(resultProvider.notifier).update((state) => '');
@@ -101,7 +100,9 @@ class KeyBindings implements CalcKeysBinding {
     _onTap();
     if (!inputController.text.characters.last.isOperator) {
       ///если последний символ не оператор
-      resultSize.set(true);
+      if (inputController.text.containsSome(calcOperators)) {
+        resultSize.set(true);
+      }
     }
   }
 

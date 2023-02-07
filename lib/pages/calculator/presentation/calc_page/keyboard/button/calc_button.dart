@@ -1,8 +1,9 @@
+import 'package:arch_test/pages/calculator/data/repositories/calc_theme_repository_impl.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import '../../../style.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CalculButton extends StatelessWidget {
-  const CalculButton({
+class CalculatorButton extends StatelessWidget {
+  const CalculatorButton({
     Key? key,
     this.value = '',
     this.size,
@@ -27,26 +28,46 @@ class CalculButton extends StatelessWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: NeumorphicButton(
-          drawSurfaceAboveChild: true,
-          margin: const EdgeInsets.all(6),
-          style: style,
-          // margin: const EdgeInsets.all(5),
-          onPressed: () {
-            onPressed();
-          },
-          child: Center(
-            child: FittedBox(
-              child: child ??
-                  Text(
+        child: Consumer(builder: (context, ref, child) {
+          int animSpeed = ref.watch(themeNotifierProvider.select((value) => value.buttonsAnimSpeed));
+          // print('animspeed: $animSpeed');
+          return NeumorphicButton(
+            duration: Duration(milliseconds: animSpeed),
+            drawSurfaceAboveChild: true,
+            margin: const EdgeInsets.all(6),
+
+            style: style,
+            // margin: const EdgeInsets.all(5),
+            onPressed: () {
+              onPressed();
+            },
+            child: Center(
+              child: this.child ??
+                  _ButtonText(
                     value,
-                    textAlign: TextAlign.center,
-                    style: buttonsText,
                   ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
+  }
+}
+
+class _ButtonText extends StatelessWidget {
+  const _ButtonText(
+    this.data, {
+    Key? key,
+  }) : super(key: key);
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => Text(
+        data,
+        style: ref.watch(themeNotifierProvider.select((value) => value.buttonText))
+
+    ));
   }
 }
