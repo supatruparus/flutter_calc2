@@ -112,11 +112,9 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
         color: color,
         intensity: params.intencity,
         depth: params.buttonDepth,
-
       ),
-
       primaryColor: params.primaryColor,
-      backgroundColor: Color.lerp(params.primaryColor, Colors.white, 0.05),
+      backgroundColor: Color.lerp(params.primaryColor, Colors.white, 0.04),
     );
   }
 
