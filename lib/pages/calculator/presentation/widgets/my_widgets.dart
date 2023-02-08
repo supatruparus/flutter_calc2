@@ -11,12 +11,10 @@ Widget buttonExample(
     return NeumorphicButton(
       padding: const EdgeInsets.all(4),
       style: style,
-
       onPressed: onTap,
       child: SizedBox(
         width: size ?? 60,
         height: size ?? 60,
-
       ),
     );
   });
