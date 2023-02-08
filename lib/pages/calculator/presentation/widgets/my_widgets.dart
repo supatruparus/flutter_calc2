@@ -16,11 +16,7 @@ Widget buttonExample(
       child: SizedBox(
         width: size ?? 60,
         height: size ?? 60,
-        child: Center(
-          child: Checkbox(
 
-            value: true, onChanged: (value) {},),
-        ),
       ),
     );
   });

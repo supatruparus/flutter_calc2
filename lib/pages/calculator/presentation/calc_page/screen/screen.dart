@@ -21,22 +21,46 @@ class Screen extends StatelessWidget {
   Widget content() {
     return Consumer(builder: (context, ref, child) {
       final Color primaryColor = ref.watch(themeNotifierProvider.select((value) => value.backgroundColor));
-      return Neumorphic(
-        // decoration: screenStyle,
-        style: NeumorphicStyle(color: Color.lerp(primaryColor, Colors.black, 0.7), depth: -10, intensity: 0.9),
-        padding: const EdgeInsets.all(15),
-        margin: const EdgeInsets.all(10),
-
-        textStyle: const TextStyle(fontSize: 10),
-
-        child: Padding(
-          padding: EdgeInsets.zero,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [Expression(), Result()],
-          ),
-        ),
-      );
+      return screen_var2(primaryColor);
     });
+  }
+
+  Neumorphic screen_var1(Color primaryColor) {
+    return Neumorphic(
+      // decoration: screenStyle,
+      style: NeumorphicStyle(color: Color.lerp(primaryColor, Colors.black, 0.7), depth: -10, intensity: 0.9),
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.all(10),
+
+      textStyle: const TextStyle(fontSize: 10),
+
+      child: Padding(
+        padding: EdgeInsets.zero,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [Expression(), Result()],
+        ),
+      ),
+    );
+  }
+
+  Neumorphic screen_var2(Color primaryColor) {
+    return Neumorphic(
+      // decoration: screenStyle,
+      style: NeumorphicStyle(color: primaryColor, depth: 5, intensity: 0.1, shape: NeumorphicShape.convex, surfaceIntensity: 1),
+      padding: const EdgeInsets.all(30),
+      margin: const EdgeInsets.all(15
+      ),
+
+      textStyle: const TextStyle(fontSize: 10),
+
+      child: Padding(
+        padding: EdgeInsets.zero,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [Expression(), Result()],
+        ),
+      ),
+    );
   }
 }
