@@ -1,6 +1,4 @@
-import 'package:arch_test/pages/calculator/data/repositories/calc_theme_repository_impl.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'expression.dart';
 import 'result.dart';
 
@@ -14,16 +12,16 @@ class Screen extends StatelessWidget {
         fit: FlexFit.loose,
         flex: flex,
         child: Center(
-          child: content(),
+          child: Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: const [Expression(), Result()],
+            ),
+          ),
         ));
   }
 
-  Widget content() {
-    return Consumer(builder: (context, ref, child) {
-      final Color primaryColor = ref.watch(themeNotifierProvider.select((value) => value.backgroundColor));
-      return screen_var2(primaryColor);
-    });
-  }
 
   Neumorphic screen_var1(Color primaryColor) {
     return Neumorphic(

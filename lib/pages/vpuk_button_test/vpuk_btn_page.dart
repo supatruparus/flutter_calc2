@@ -1,7 +1,7 @@
 import 'package:arch_test/pages/calculator/data/repositories/calc_theme_repository_impl.dart';
 import 'package:arch_test/pages/vpuk_button_test/theme.dart';
 import 'package:arch_test/pages/vpuk_button_test/view_model.dart';
-import 'package:arch_test/pages/vpuk_button_test/vpuk_btn.dart';
+import 'package:arch_test/widgets/vpuk_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +30,7 @@ class _VpukButtonTestState extends ConsumerState<VpukButtonTest> {
                   child: const Text('change color'),
                 ),
                 SizedBox(height: 30,),
-                VpukButton.circle(
+                NeuButtonVar1.circle(
                   animSpeed: 50,
                   color: theme.bgColor.withBlack(0.3),
                   onPressed: (){

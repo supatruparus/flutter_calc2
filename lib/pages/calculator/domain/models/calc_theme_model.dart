@@ -12,7 +12,7 @@ class CalculatorTheme {
     this.inputStyle = const TextStyle(
         fontFamily: 'Changa',
         height: 1,
-        fontSize: 48,
+        fontSize: 38,
         color: Colors.white,
         shadows: [Shadow(offset: Offset(1, 4), color: Colors.white12, blurRadius: 10)]),
     this.resultText = const TextStyle(

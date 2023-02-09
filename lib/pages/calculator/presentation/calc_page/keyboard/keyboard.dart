@@ -1,4 +1,6 @@
 import 'package:arch_test/pages/calculator/data/repositories/calc_theme_repository_impl.dart';
+import 'package:arch_test/pages/calculator/presentation/style.dart';
+import 'package:arch_test/pages/calculator/presentation/widgets/widgets/calc_keyboard/CalcKeyboardV2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,10 +25,12 @@ class Keyboard extends StatelessWidget {
         final textColor = ref.watch(themeNotifierProvider.select((value) => value.buttonText.color));
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: CalcKeyboard(
+          child: CalcKeyboardV2(
             controller: KeyBindings(ref),
             buttonsStyle: buttonStyleProvider,
-            contentColor: textColor ?? Colors.black,
+            contentColor: textColor ?? Colors.white54,
+            textStyle: MyTextStyles.changaMedium,
+
           ),
         );
       }),

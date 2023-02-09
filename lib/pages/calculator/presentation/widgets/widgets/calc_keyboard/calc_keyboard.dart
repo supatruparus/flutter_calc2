@@ -4,8 +4,8 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 import 'controller.dart';
 
-class CalcKeyboard extends StatelessWidget {
-  const CalcKeyboard({
+class CalcKeyboardV1 extends StatelessWidget {
+  const CalcKeyboardV1({
     Key? key,
     required this.controller,
     this.buttonsStyle,
@@ -16,6 +16,7 @@ class CalcKeyboard extends StatelessWidget {
   final double? buttonsSize;
   final NeumorphicStyle? buttonsStyle;
   final Color contentColor;
+
   // final Widget button;
 
   @override
