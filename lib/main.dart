@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:arch_test/pages/bloc_test/bloc_test_page.dart';
 import 'package:arch_test/pages/calculator/presentation/calcv2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,6 @@ class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, ref) {
-    return const MaterialApp(home: CalculatorV2(),);
+    return const MaterialApp(home: BlocTestPage(),);
   }
 }
