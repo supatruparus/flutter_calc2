@@ -46,6 +46,7 @@ class MyMathRepository implements MathRepository {
         } else {
           result = value;
         }
+      // ignore: empty_catches
       } catch (e) {}
       return result;
     } else {

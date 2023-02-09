@@ -4,6 +4,7 @@ import 'package:arch_test/pages/calculator/data/storage/storage_interface.dart';
 import 'package:arch_test/pages/calculator/domain/models/calc_theme_model.dart';
 import 'package:arch_test/pages/calculator/domain/repository/calc_theme_repository.dart';
 import 'package:arch_test/pages/calculator/presentation/style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -96,7 +97,9 @@ class ThemeNotifier extends StateNotifier<CalculatorTheme> implements CalcThemeR
   @override
   loadTheme() async {
     final params = await themeStorage.loadTheme();
-    print('theme loaded, params: ${params.toString()}');
+    if (kDebugMode) {
+      print('theme loaded, params: ${params.toString()}');
+    }
     ('params: ${params.boxShape.toString()}');
     final color = params.primaryColor;
     NeumorphicShape shape = _getNeuShape(params.buttonShape);

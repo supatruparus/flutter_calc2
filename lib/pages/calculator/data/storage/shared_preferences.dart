@@ -60,7 +60,9 @@ extension GetIndex on NeumorphicBoxShape {
   _saveIntensity(double value)async{
     bool isSaved = await sharedPref.setDouble(_INTENSITY, value);
     if(isSaved){
-      print('intencity saved: $value');
+      if (kDebugMode) {
+        print('intencity saved: $value');
+      }
     }
   }
   double? _getIntensity() {
@@ -68,7 +70,9 @@ extension GetIndex on NeumorphicBoxShape {
   }
   _saveSurfaceIntensity(double value)async{
     bool isSaved = await sharedPref.setDouble(_SURFACE_INTENSITY, value);
-    if(isSaved) print('surfaceIntencity saved: $value');
+    if(isSaved) if (kDebugMode) {
+      print('surfaceIntencity saved: $value');
+    }
   }
   double _getSurfaceIntensity() {
     final double? value =  sharedPref.getDouble(_SURFACE_INTENSITY);
@@ -134,7 +138,9 @@ extension GetIndex on NeumorphicBoxShape {
   _getButtonsDepth(){
     final double? value =  sharedPref.getDouble(_DEPTH);
     if(value==null){
-      print("can't get value depth");
+      if (kDebugMode) {
+        print("can't get value depth");
+      }
       return 3;
     } else{
       return value;
